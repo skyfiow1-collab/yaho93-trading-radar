@@ -1,0 +1,169 @@
+<!doctype html>
+<html lang="ko">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="robots" content="noindex, nofollow">
+  <meta name="theme-color" content="#0b1220">
+  <title>YAHO93 Trading Radar | 개인용 주식 실전학습</title>
+  <style>
+    :root {color-scheme:dark;font-family:system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;background:#0b1220;color:#ecf2ff}
+    * {box-sizing:border-box}
+    body {margin:0;min-height:100vh;background:radial-gradient(circle at 85% -10%,#18345b 0%,transparent 42%),#0b1220}
+    header,.layout,footer {max-width:1080px;margin:auto;padding:0 22px}
+    header {padding-top:26px;display:flex;align-items:center;justify-content:space-between;gap:12px}
+    .brand {font-weight:850;letter-spacing:.12em;font-size:14px;color:#8fbdff}
+    .version {font-size:12px;color:#a0aec7;border:1px solid #27364e;border-radius:20px;padding:7px 12px}
+    .hero {padding:65px 0 42px}
+    .eyebrow {font-size:12px;letter-spacing:.15em;color:#59d6bd;font-weight:800}
+    h1 {font-size:clamp(34px,6vw,62px);letter-spacing:-.045em;line-height:1.12;margin:14px 0 16px}
+    .lead {font-size:16px;line-height:1.8;color:#aebcd3;max-width:700px}
+    .grid {display:grid;grid-template-columns:1.2fr .8fr;gap:18px}
+    .panel {border:1px solid #28374f;background:rgba(17,28,46,.88);border-radius:18px;padding:26px}
+    .panel h2 {font-size:20px;margin:0 0 14px}
+    .panel h3 {font-size:16px;margin:0 0 10px}
+    .sub {color:#a7b6cf;font-size:14px;line-height:1.7}
+    .tag {display:inline-flex;align-items:center;gap:7px;color:#70dab7;background:#15392f;padding:7px 11px;border-radius:20px;font-size:12px;font-weight:700}
+    .dot {width:7px;height:7px;border-radius:50%;background:currentColor}
+    button,.linkbtn {cursor:pointer;border:0;background:#4b91f5;color:#06142a;border-radius:11px;padding:13px 18px;font-size:14px;font-weight:750;text-decoration:none;display:inline-flex;align-items:center;justify-content:center;gap:8px}
+    button:hover,.linkbtn:hover {filter:brightness(1.1)}
+    button:disabled {opacity:.5;cursor:wait}
+    .secondary {background:transparent;color:#dce8fc;border:1px solid #37506b}
+    .actions {display:flex;gap:10px;flex-wrap:wrap;margin:20px 0 0}
+    .hidden {display:none!important}
+    .profile {background:#0b1629;border:1px solid #27384d;padding:18px;border-radius:12px;margin:18px 0 0;overflow-wrap:anywhere}
+    .field {font-size:12px;color:#8396b1;margin:0 0 5px}
+    .value {font-size:14px;font-weight:650;line-height:1.6;margin:0}
+    code {font-size:13px;color:#8de1cf;overflow-wrap:anywhere}
+    .msg {min-height:20px;font-size:13px;color:#a9b9cf;line-height:1.6;margin-top:14px}
+    .error {color:#ffadad}
+    .row {display:flex;align-items:center;justify-content:space-between;gap:15px;border-bottom:1px solid #23334a;padding:13px 0;font-size:14px}
+    .row:last-child {border:0}
+    .ok {color:#65d7aa;font-weight:700}
+    .soon {color:#f0ce7b;font-weight:700}
+    .roadmap {display:grid;grid-template-columns:repeat(3,1fr);gap:18px;margin:18px 0 48px}
+    .roadmap .panel {min-height:180px}
+    .roadmap p {font-size:13px;color:#a7b6cf;line-height:1.7}
+    footer {padding-bottom:38px;color:#8293ac;font-size:12px;line-height:1.8}
+    a {color:#a2cbff}
+    @media(max-width:760px){.hero{padding:45px 0 30px}.grid,.roadmap{grid-template-columns:1fr}.panel{padding:21px}}
+  </style>
+</head>
+<body>
+  <header>
+    <div class="brand">YAHO93 <span style="color:#e3edff">/ TRADING RADAR</span></div>
+    <span class="version">FOUNDATION v0.1</span>
+  </header>
+  <main class="layout">
+    <section class="hero">
+      <div class="eyebrow">MARKET SIGNALS → THESIS → REVIEW</div>
+      <h1>시장을 읽고,<br>판단을 기록하다.</h1>
+      <p class="lead">뉴스를 출발점으로 실제 가격·거래대금·거래량을 검증하고, 진입 조건과 무효화 조건을 기록하는 야호93 개인 실전학습 레이더입니다.</p>
+      <div class="tag"><span class="dot"></span>초기 구축 단계 · 실제 주문 기능 없음</div>
+    </section>
+    <section class="grid" aria-label="로그인과 시스템 상태">
+      <article class="panel">
+        <h2>Google 로그인</h2>
+        <p class="sub">Firebase 로그인으로 사용자 고유 ID(UID)를 확인합니다. 지금은 인증을 점검하는 단계이며 로그인했다고 곧바로 주식 데이터에 접근할 수 있는 것은 아닙니다.</p>
+        <div class="actions">
+          <button id="login" type="button" disabled>Google 계정으로 로그인</button>
+          <button id="logout" type="button" class="secondary hidden">로그아웃</button>
+        </div>
+        <div id="profile" class="profile hidden">
+          <p class="field">로그인 계정</p>
+          <p id="email" class="value">-</p>
+          <p class="field" style="margin-top:16px">Firebase UID (본인 확인용)</p>
+          <code id="uid">-</code>
+          <div class="actions"><button id="copyUid" type="button" class="secondary">UID 복사</button></div>
+        </div>
+        <p id="status" class="msg" role="status" aria-live="polite">인증 모듈 준비 중...</p>
+      </article>
+      <article class="panel">
+        <h2>연동 현황</h2>
+        <div class="row"><span>키움 REST API 인증·시세조회</span><span class="ok">검증 완료</span></div>
+        <div class="row"><span>Oracle 데이터 수집 서버</span><span class="ok">검증 완료</span></div>
+        <div class="row"><span>Cloudflare 비공개 터널</span><span class="ok">검증 완료</span></div>
+        <div class="row"><span>사용자별 시세 API 권한</span><span class="soon">설정 예정</span></div>
+        <div class="row"><span>실시간 장중 감시</span><span class="soon">검증 예정</span></div>
+        <div class="actions"><a class="linkbtn secondary" href="https://yaho93-radar-api.skyfiow1.workers.dev/health" target="_blank" rel="noopener noreferrer">서버 연결 상태 확인</a></div>
+        <p class="sub">상태 표시는 앞서 수행한 연결 테스트 기준입니다. 버튼으로 현재 서버 상태를 별도 창에서 확인할 수 있습니다.</p>
+      </article>
+    </section>
+    <section class="roadmap" aria-label="개발 예정 기능">
+      <article class="panel"><h3>01 · 시장 레이더</h3><p>거래대금 상위, 거래량 급증, 시장 주도 테마를 구분해 관찰합니다.</p></article>
+      <article class="panel"><h3>02 · 시나리오 기록</h3><p>재료의 근거, 확인할 가격·수급 조건, 무효화 기준을 남깁니다.</p></article>
+      <article class="panel"><h3>03 · 장 마감 복기</h3><p>장전 가설과 실제 움직임을 비교해 다음 판단에 반영합니다.</p></article>
+    </section>
+  </main>
+  <footer>
+    개인 실전학습용. 현재 공개된 화면에는 계좌·주문 기능과 시세 API 접근 권한이 없습니다.<br>
+    데이터베이스 읽기·쓰기는 기본 차단 상태를 유지합니다.
+  </footer>
+  <script type="module">
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/13.3.0/firebase-app.js";
+    import { getAuth, GoogleAuthProvider, signInWithPopup, signOut, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/13.3.0/firebase-auth.js";
+
+    // Firebase 웹앱 설정값은 클라이언트용 공개 식별자입니다. 서비스 계정 키·비밀번호가 아닙니다.
+    const firebaseConfig = {
+      apiKey: "AIzaSyDPFu2jKJ1igf4Ar6SC-1AqikcGtRX1f4s",
+      authDomain: "yaho93-trading-radar.firebaseapp.com",
+      projectId: "yaho93-trading-radar",
+      storageBucket: "yaho93-trading-radar.firebasestorage.app",
+      messagingSenderId: "290646629621",
+      appId: "1:290646629621:web:4a9691c7968f48f194b9bc"
+    };
+
+    const $ = (id) => document.getElementById(id);
+    const status = (message, error = false) => { $("status").textContent = message; $("status").classList.toggle("error", error); };
+    const login = $("login");
+    const logout = $("logout");
+    const provider = new GoogleAuthProvider();
+    provider.setCustomParameters({ prompt: "select_account" });
+    const auth = getAuth(initializeApp(firebaseConfig));
+    auth.languageCode = "ko";
+
+    onAuthStateChanged(auth, (user) => {
+      login.disabled = false;
+      login.classList.toggle("hidden", Boolean(user));
+      logout.classList.toggle("hidden", !user);
+      $("profile").classList.toggle("hidden", !user);
+      if (user) {
+        $("email").textContent = user.email || "(이메일 없음)";
+        $("uid").textContent = user.uid;
+        status("로그인 완료. 사용자 UID를 확인할 수 있습니다. 시세 API 접근 권한은 아직 설정되지 않았습니다.");
+      } else {
+        $("email").textContent = "-";
+        $("uid").textContent = "-";
+        status("로그인 전입니다. Google 계정으로 로그인해 UID를 확인하세요.");
+      }
+    }, (error) => status("인증 상태 확인 실패: " + error.code, true));
+
+    login.addEventListener("click", async () => {
+      login.disabled = true;
+      status("Google 로그인 창을 여는 중...");
+      try {
+        await signInWithPopup(auth, provider);
+      } catch (e) {
+        login.disabled = false;
+        if (e.code === "auth/unauthorized-domain") {
+          status("Firebase Authentication → 설정 → 승인된 도메인에 skyfiow1-collab.github.io를 추가해야 합니다.", true);
+        } else if (e.code === "auth/popup-closed-by-user") {
+          status("로그인 창이 닫혔습니다. 다시 시도할 수 있습니다.");
+        } else {
+          status("로그인 실패 (" + (e.code || "unknown") + "). 로그인 제공업체와 승인된 도메인 설정을 확인하세요.", true);
+        }
+      }
+    });
+
+    logout.addEventListener("click", async () => {
+      try { await signOut(auth); } catch (e) { status("로그아웃 실패: " + e.code, true); }
+    });
+
+    $("copyUid").addEventListener("click", async () => {
+      const uid = $("uid").textContent;
+      try { await navigator.clipboard.writeText(uid); status("UID가 복사됐습니다. UID는 공개 게시물에 올리지 않는 편이 좋습니다."); }
+      catch { status("복사할 수 없습니다. 화면에 표시된 UID를 직접 복사해 주세요.", true); }
+    });
+  </script>
+</body>
+</html>
