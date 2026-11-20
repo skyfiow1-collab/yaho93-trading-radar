@@ -74,7 +74,11 @@
           <p id="email" class="value">-</p>
           <p class="field" style="margin-top:16px">Firebase UID (본인 확인용)</p>
           <code id="uid">-</code>
-          <div class="actions"><button id="copyUid" type="button" class="secondary">UID 복사</button></div>
+          <div class="actions">
+            <button id="copyUid" type="button" class="secondary">UID 복사</button>
+            <button id="testAccess" type="button">Cloudflare 본인 인증 테스트</button>
+          </div>
+          <p id="apiStatus" class="msg" aria-live="polite">Worker 인증 검증 코드를 배포한 뒤 테스트할 수 있습니다.</p>
         </div>
         <p id="status" class="msg" role="status" aria-live="polite">인증 모듈 준비 중...</p>
       </article>
@@ -127,6 +131,7 @@
       login.classList.toggle("hidden", Boolean(user));
       logout.classList.toggle("hidden", !user);
       $("profile").classList.toggle("hidden", !user);
+      $("apiStatus").textContent = "Cloudflare 인증 테스트를 진행하지 않았습니다.";
       if (user) {
         $("email").textContent = user.email || "(이메일 없음)";
         $("uid").textContent = user.uid;
@@ -157,6 +162,39 @@
 
     logout.addEventListener("click", async () => {
       try { await signOut(auth); } catch (e) { status("로그아웃 실패: " + e.code, true); }
+    });
+
+    $("testAccess").addEventListener("click", async () => {
+      const button = $("testAccess");
+      const result = $("apiStatus");
+      if (!auth.currentUser) {
+        result.textContent = "Google 로그인 후 테스트해 주세요.";
+        return;
+      }
+      button.disabled = true;
+      result.textContent = "Firebase 로그인 토큰을 Cloudflare에서 검증 중...";
+      try {
+        const token = await auth.currentUser.getIdToken();
+        const response = await fetch("https://yaho93-radar-api.skyfiow1.workers.dev/whoami", {
+          method: "GET",
+          headers: { Authorization: "Bearer " + token },
+          cache: "no-store"
+        });
+        const data = await response.json();
+        if (response.ok && data.authenticated && data.access === "owner") {
+          result.textContent = "✅ 본인 인증 성공! Firebase 서명·만료·UID 검증을 통과했습니다.";
+        } else if (response.status === 403) {
+          result.textContent = "접근 거부(403): Firebase UID와 허용 UID가 일치하는지 확인해 주세요.";
+        } else if (response.status === 404) {
+          result.textContent = "Worker에 /whoami 코드가 아직 배포되지 않았습니다.";
+        } else {
+          result.textContent = "인증 테스트 실패 (HTTP " + response.status + ", " + (data.error || "unknown") + ").";
+        }
+      } catch (e) {
+        result.textContent = "연결 확인 실패: Worker 코드 배포 또는 브라우저 CORS 설정을 확인해 주세요.";
+      } finally {
+        button.disabled = false;
+      }
     });
 
     $("copyUid").addEventListener("click", async () => {
